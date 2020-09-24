@@ -112,9 +112,6 @@ public final class ConnectionManager {
         return group;
     }
 
-    public static boolean isClientOnline(String address){
-        return NAMESPACE_MAP.containsKey(address);
-    }
     static void clear() {
         CONN_MAP.clear();
         NAMESPACE_MAP.clear();

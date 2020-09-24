@@ -32,16 +32,16 @@ public final class VersionUtils {
     /**
      * Parse version of Sentinel from raw string.
      *
-     * @param verStr version string
+     * @param versionFull version string
      * @return parsed {@link SentinelVersion} if the version is valid; empty if
      * there is something wrong with the format
      */
-    public static Optional<SentinelVersion> parseVersion(String verStr) {
-        if (StringUtil.isBlank(verStr)) {
+    public static Optional<SentinelVersion> parseVersion(String s) {
+        if (StringUtil.isBlank(s)) {
             return Optional.empty();
         }
         try {
-            String versionFull = verStr;
+            String versionFull = s;
             SentinelVersion version = new SentinelVersion();
             
             // postfix

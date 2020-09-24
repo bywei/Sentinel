@@ -30,23 +30,12 @@ public class TokenResult {
     private int remaining;
     private int waitInMs;
 
-    private long tokenId;
-
     private Map<String, String> attachments;
 
-    public TokenResult() {
-    }
+    public TokenResult() {}
 
     public TokenResult(Integer status) {
         this.status = status;
-    }
-
-    public long getTokenId() {
-        return tokenId;
-    }
-
-    public void setTokenId(long tokenId) {
-        this.tokenId = tokenId;
     }
 
     public Integer getStatus() {
@@ -88,11 +77,10 @@ public class TokenResult {
     @Override
     public String toString() {
         return "TokenResult{" +
-                "status=" + status +
-                ", remaining=" + remaining +
-                ", waitInMs=" + waitInMs +
-                ", attachments=" + attachments +
-                ", tokenId=" + tokenId +
-                '}';
+            "status=" + status +
+            ", remaining=" + remaining +
+            ", waitInMs=" + waitInMs +
+            ", attachments=" + attachments +
+            '}';
     }
 }

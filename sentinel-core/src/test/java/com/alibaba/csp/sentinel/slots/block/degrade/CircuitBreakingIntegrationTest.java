@@ -188,14 +188,14 @@ public class CircuitBreakingIntegrationTest extends AbstractTimeBasedTest {
     }
     
     @Test
-    public void testMultipleHalfOpenedBreakers() throws Exception {
+    public void testMultipleHalfOpenedBreaders() throws Exception {
         CircuitBreakerStateChangeObserver observer = mock(CircuitBreakerStateChangeObserver.class);
         setCurrentMillis(System.currentTimeMillis() / 1000 * 1000);
         int retryTimeoutSec = 2;
         int maxRt = 50;
         int statIntervalMs = 20000;
         int minRequestAmount = 1;
-        String res = "CircuitBreakingIntegrationTest_testMultipleHalfOpenedBreakers";
+        String res = "CircuitBreakingIntegrationTest_testMultipleHalfOpenedBreaders";
         EventObserverRegistry.getInstance().addStateChangeObserver(res, observer);
         // initial two rules
         DegradeRuleManager.loadRules(Arrays.asList(

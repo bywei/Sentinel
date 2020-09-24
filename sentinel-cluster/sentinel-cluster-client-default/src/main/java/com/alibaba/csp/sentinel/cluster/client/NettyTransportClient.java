@@ -126,7 +126,8 @@ public class NettyTransportClient implements ClusterTransportClient {
                     } else {
                         failConnectedTime.set(0);
                         channel = future.channel();
-                        RecordLog.info("[NettyTransportClient] Successfully connect to server <{}:{}>", host, port);
+                        RecordLog.info(
+                            "[NettyTransportClient] Successfully connect to server <" + host + ":" + port + ">");
                     }
                 }
             });
@@ -143,7 +144,7 @@ public class NettyTransportClient implements ClusterTransportClient {
                 @Override
                 public void run() {
                     if (shouldRetry.get()) {
-                        RecordLog.info("[NettyTransportClient] Reconnecting to server <{}:{}>", host, port);
+                        RecordLog.info("[NettyTransportClient] Reconnecting to server <" + host + ":" + port + ">");
                         try {
                             startInternal();
                         } catch (Exception e) {
@@ -237,12 +238,10 @@ public class NettyTransportClient implements ClusterTransportClient {
     }
 
     private int getCurrentId() {
-        int pre, next;
-        do {
-            pre = idGenerator.get();
-            next = pre >= MAX_ID ? MIN_ID : pre + 1;
-        } while (!idGenerator.compareAndSet(pre, next));
-        return next;
+        if (idGenerator.get() > MAX_ID) {
+            idGenerator.set(0);
+        }
+        return idGenerator.incrementAndGet();
     }
 
     /*public CompletableFuture<ClusterResponse> sendRequestAsync(ClusterRequest request) {
@@ -267,6 +266,5 @@ public class NettyTransportClient implements ClusterTransportClient {
         return future;
     }*/
 
-    private static final int MIN_ID = 1;
     private static final int MAX_ID = 999_999_999;
 }
