@@ -1,5 +1,47 @@
 # Sentinel 控制台
 
+## -1. 兼容修改
+
+Sentinel 1.8.0 基础上添加了zookeeper 3.4.6 版本的持久化（只有该版本兼容，其他高版本兼容性需调整pom依赖版本）
+
+参考资料：
+
+Sentinel Dashboard集成Zookeeper持久化
+https://my.oschina.net/yugj/blog/3104822
+https://blog.csdn.net/s1441101265/article/details/107559493
+
+参考以上，还需在ZookeeperConfig添加@Bean
+
+```bash
+    @Bean
+    public Converter<String, List<GatewayFlowRuleEntity>> gatewayFlowRuleEntityDecoder() {
+        return s -> JSON.parseArray(s, GatewayFlowRuleEntity.class);
+    }
+
+    @Bean
+    public Converter<List<GatewayFlowRuleEntity>, String> gatewayFlowRuleEntityEncoder() {
+        return JSON::toJSONString;
+    }
+
+    @Bean
+    public Converter<String, List<ApiDefinitionEntity>> gatewayApiEntityDecoder() {
+        return s -> JSON.parseArray(s, ApiDefinitionEntity.class);
+    }
+    
+    @Bean
+    public Converter<List<ApiDefinitionEntity>, String> gatewayApiEntityEncoder() {
+        return JSON::toJSONString;
+    }
+```
+
+
+
+
+
+
+zookeeper版本不兼容问题
+修改dashboard，兼容低版本，zookeeper3.4.6(源代码编写已经考虑到了)换成<curator.version>2.12.0</curator.version> 即可
+
 ## 0. 概述
 
 Sentinel 控制台是流量控制、熔断降级规则统一配置和管理的入口，它为用户提供了机器自发现、簇点链路自发现、监控、规则配置等功能。在 Sentinel 控制台上，我们可以配置规则并实时查看流量控制效果。
