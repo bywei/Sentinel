@@ -26,6 +26,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.ApiDefinitionEntity;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.GatewayFlowRuleEntity;
+import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.DegradeRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.fastjson.JSON;
@@ -64,6 +65,16 @@ public class ZookeeperConfig {
     @Bean
     public Converter<List<ApiDefinitionEntity>, String> gatewayApiEntityEncoder() {
         return JSON::toJSONString;
+    }
+    
+    @Bean
+    public Converter<String, List<DegradeRuleEntity>> degradeRuleDecoder() {
+    	return s -> JSON.parseArray(s, DegradeRuleEntity.class);
+    }
+    
+    @Bean
+    public Converter<List<DegradeRuleEntity>, String> degradeRuleEncoder() {
+    	return JSON::toJSONString;
     }
 
     @Bean

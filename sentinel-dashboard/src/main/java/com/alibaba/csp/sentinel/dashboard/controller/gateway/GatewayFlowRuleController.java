@@ -56,7 +56,7 @@ import static com.alibaba.csp.sentinel.dashboard.datasource.entity.gateway.Gatew
 public class GatewayFlowRuleController {
 
     private final Logger logger = LoggerFactory.getLogger(GatewayFlowRuleController.class);
-
+    private final static String ZK_FLOW_PATH = "/gateway/flow";
     @Autowired
     private InMemGatewayFlowRuleStore repository;
 
@@ -86,7 +86,7 @@ public class GatewayFlowRuleController {
 
         try {
             //List<GatewayFlowRuleEntity> rules = sentinelApiClient.fetchGatewayFlowRules(app, ip, port).get();
-        	List<GatewayFlowRuleEntity> rules = ruleProvider.getRules(app);
+        	List<GatewayFlowRuleEntity> rules = ruleProvider.getRules(app + ZK_FLOW_PATH);
             repository.saveAll(rules);
             return Result.ofSuccess(rules);
         } catch (Throwable throwable) {
@@ -451,6 +451,6 @@ public class GatewayFlowRuleController {
      */
     private void publishRules(/*@NonNull*/ String app) throws Exception {
         List<GatewayFlowRuleEntity> rules = repository.findAllByApp(app);
-        rulePublisher.publish(app, rules);
+        rulePublisher.publish(app + ZK_FLOW_PATH, rules);
     }
 }

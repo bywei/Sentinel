@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,7 @@ public class GatewayApiController {
 
     private final Logger logger = LoggerFactory.getLogger(GatewayApiController.class);
 
+    private final static String ZK_API_PATH = "/gateway/api";
     @Autowired
     private InMemApiDefinitionStore repository;
 
@@ -94,7 +96,7 @@ public class GatewayApiController {
 
         try {
             //List<ApiDefinitionEntity> apis = sentinelApiClient.fetchApis(app, ip, port).get();
-        	List<ApiDefinitionEntity> apis = ruleProvider.getRules(app);
+        	List<ApiDefinitionEntity> apis = ruleProvider.getRules(app + ZK_API_PATH);
             repository.saveAll(apis);
             return Result.ofSuccess(apis);
         } catch (Throwable throwable) {
@@ -164,7 +166,7 @@ public class GatewayApiController {
 
         // 检查API名称不能重复
         List<ApiDefinitionEntity> allApis = repository.findAllByMachine(MachineInfo.of(app.trim(), ip.trim(), port));
-        if (allApis.stream().map(o -> o.getApiName()).anyMatch(o -> o.equals(apiName.trim()))) {
+        if (allApis.stream().map(o -> StringUtils.isBlank(o.getApiName())?"":o.getApiName()).anyMatch(o -> o.equals(apiName.trim()))) {
             return Result.ofFail(-1, "apiName exists: " + apiName);
         }
 
@@ -290,6 +292,7 @@ public class GatewayApiController {
      */
     private void publishRules(/*@NonNull*/ String app) throws Exception {
         List<ApiDefinitionEntity> rules = repository.findAllByApp(app);
-        rulePublisher.publish(app, rules);
+        rulePublisher.publish(app + ZK_API_PATH, rules);
     }
+    
 }
